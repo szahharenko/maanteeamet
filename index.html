@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=800, initial-scale=1">
+	<title>METSLOOMAD SÕIDUTEEL</title>
+    <meta name="description" content="Vali interaktiivse kaardi menüüst aastaaeg või kuu ja tutvu, millistel metsloomadel on just sel ajal kõige aktiivsem liikumisperiood ning seetõttu suurem oht sattuda sõiduteele." />
+    <meta property="og:locale" content="et_ET"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Metsloomad sõiduteel" />
+    <meta property="og:description" content="Vali interaktiivse kaardi menüüst aastaaeg või kuu ja tutvu, millistel metsloomadel on just sel ajal kõige aktiivsem liikumisperiood ning seetõttu suurem oht sattuda sõiduteele." />
+    <meta property="og:site_name" content="Metsloomad sõiduteel interaktiiv kaart"/>
+    <meta property="og:image" content="https://app.rockstar.ee/mnt/img/fbshare.jpg" />
+    <meta property="og:image:width" content="1000" />
+    <meta property="og:image:height" content="625" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700&display=swap&subset=cyrillic" rel="stylesheet">
+	<link href="assets/app.css" rel="stylesheet">
+</head>
+<body>
+	<div id="mnt">
+		<div class="app-header">
+			<img src="img/mnt-logo.png" border="0" alt="">
+		</div>
+		<div class="app-content transition" :class="{[season]:true,[animation]:true}">
+			<div class="season" @click="nextMonth()">
+				<img src="img/scale.png" border="0" alt="">
+				<div class="layer house"></div>
+				<div class="layer road"></div>
+				<template v-for="season in seasons">
+					<div class="layer t bg" :class="[season.shrt]"></div>
+				</template>
+				<template v-for="(layer, index) in layers">
+					<div class="layer tree grow" :class="{['sp' + (index + 1)]:true,['d' + index]:true}"></div>
+				</template>
+				<div v-if="!interaction" class="intercation" @click.stop="">
+					<h1>METSLOOMAD SÕIDUTEEL</h1>
+					<p>Vali interaktiivse kaardi menüüst aastaaeg või kuu ja tutvu, millistel metsloomadel on just sel ajal kõige aktiivsem liikumisperiood ning seetõttu suurem oht sattuda sõiduteele.</p>
+					<p><strong>Turvalist liiklemist!</strong></p>
+				</div>
+				<template v-for="mon in getMonthObjects()">
+					<template v-for="a in mon.animals">
+						<span class="animal" :class="{[a.type]:true,reverse:a.reverse}" :style="{ bottom: a.y + '%', left: a.x + '%', width: a.w + '%' }">
+							<span><img :src="'img/'+ a.type + '.png'" :title="a.name"/></span>
+						</span>
+					</template>
+				</template>
+			</div>
+			<div class="app-bar">
+				<ul class="monthes transition" :class="{interaction:interaction}">
+					<li class="nav-li next" @click="nextMonth()">❯</li>
+					<li class="nav-li prev" @click="prevMonth()">❮</li>
+					<li :class="{active:(item.id == month)}" v-for="item in monthes" v-bind:key="item.id" @click="setSeason(item.type,item.id)">{{item.name}}</li>
+				</ul>
+				<ul class="seasons"><li :class="{active:(item.id == season)}" v-for="item in seasons" v-bind:key="item.id" @click="setSeason(item.id)">{{item.name}}</li></ul>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+	<script src="assets/data.js"></script>
+	<script src="assets/app.js"></script>
+</body>
+</html>
